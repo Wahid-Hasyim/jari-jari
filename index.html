@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Luas Lingkaran | Kelas 9 IBS 2</title>
+<style>
+  :root { --navy:#13233f; --blue:#2563eb; --sky:#eaf2ff; --ink:#172033; --muted:#64748b; --line:#dbe4f0; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; min-height:100vh; padding:24px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--ink);
+    background:radial-gradient(circle at top left,#dceaff 0,transparent 38%),linear-gradient(135deg,#f8fbff,#eef4fb);
+  }
+  .app { width:min(100%,760px); background:#fff; border:1px solid #e4ebf5; border-radius:26px; overflow:hidden; box-shadow:0 24px 70px #1b37601c; }
+  header { padding:30px 28px 25px; color:#fff; background:linear-gradient(125deg,#13233f,#2455a6); }
+  .eyebrow { font-size:.76rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:#c6dcff; }
+  h1 { margin:9px 0 8px; font-size:clamp(1.8rem,5vw,2.55rem); line-height:1.12; }
+  header p { margin:0; color:#e1ebff; line-height:1.55; }
+  main { padding:26px 28px 24px; }
+  .layout { display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:center; }
+  .diagram { min-height:245px; display:flex; align-items:center; justify-content:center; background:linear-gradient(145deg,#f4f8ff,#eaf2ff); border-radius:20px; padding:18px; }
+  svg { width:100%; max-width:260px; height:auto; }
+  .form-title { margin:0 0 7px; font-size:1.2rem; }
+  .hint { margin:0 0 19px; color:var(--muted); font-size:.92rem; line-height:1.5; }
+  label { display:block; font-size:.92rem; font-weight:750; margin-bottom:8px; }
+  .input-wrap { display:flex; align-items:center; border:1.5px solid var(--line); border-radius:13px; overflow:hidden; transition:border-color .2s,box-shadow .2s; }
+  .input-wrap:focus-within { border-color:var(--blue); box-shadow:0 0 0 4px #2563eb18; }
+  input { width:100%; min-width:0; border:0; outline:0; padding:14px 13px; font-size:1.05rem; color:var(--ink); background:transparent; }
+  .unit { padding:0 14px; color:var(--muted); font-weight:700; white-space:nowrap; }
+  .actions { display:flex; gap:10px; margin-top:13px; }
+  button { border:0; border-radius:12px; padding:12px 15px; font:inherit; font-weight:800; cursor:pointer; transition:transform .15s,opacity .15s; }
+  button:active { transform:scale(.98); }
+  .primary { background:var(--blue); color:white; flex:1; }
+  .secondary { background:#eef2f7; color:#334155; }
+  .error { min-height:20px; margin:9px 0 0; color:#b91c1c; font-size:.86rem; }
+  .result { margin-top:25px; padding:20px; border-radius:18px; background:#f3f7ff; border:1px solid #dce8ff; }
+  .result-label { color:#526580; font-weight:750; font-size:.88rem; }
+  .result-number { margin:5px 0 2px; color:#1749a2; font-size:clamp(1.9rem,6vw,2.8rem); font-weight:900; overflow-wrap:anywhere; }
+  .formula { color:#43536d; font-size:.95rem; line-height:1.65; }
+  .formula strong { color:#172033; }
+  .caption { border-top:1px solid #edf1f7; padding:18px 24px; text-align:center; color:#53647d; font-size:.9rem; }
+  .caption strong { color:#1d3e78; }
+  @media (max-width:600px) {
+    body { padding:12px; align-items:flex-start; }
+    .app { border-radius:20px; }
+    header { padding:24px 21px; }
+    main { padding:20px 18px; }
+    .layout { grid-template-columns:1fr; gap:18px; }
+    .diagram { min-height:190px; }
+    svg { max-width:210px; }
+    .caption { padding:16px 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="eyebrow">Matematika • Kelas 9</div>
+    <h1>Kalkulator Luas Lingkaran</h1>
+    <p>Masukkan nilai jari-jari untuk menghitung luas lingkaran secara otomatis.</p>
+  </header>
+  <main>
+    <div class="layout">
+      <div class="diagram" aria-label="Ilustrasi lingkaran dan jari-jari">
+        <svg viewBox="0 0 260 230" role="img" aria-label="Lingkaran dengan jari-jari r">
+          <defs><linearGradient id="fill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dbeafe"/><stop offset="1" stop-color="#a8c8ff"/></linearGradient></defs>
+          <circle cx="126" cy="112" r="83" fill="url(#fill)" stroke="#2563eb" stroke-width="3"/>
+          <line x1="126" y1="112" x2="209" y2="112" stroke="#163f91" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="126" cy="112" r="4.5" fill="#163f91"/>
+          <text x="163" y="101" font-size="17" font-weight="800" fill="#163f91">r</text>
+          <text x="126" y="218" text-anchor="middle" font-size="12" fill="#53647d">r = jari-jari</text>
+        </svg>
+      </div>
+      <section>
+        <h2 class="form-title">Hitung luasnya</h2>
+        <p class="hint">Jari-jari adalah jarak dari titik pusat lingkaran ke tepinya.</p>
+        <label for="radius">Jari-jari (r)</label>
+        <div class="input-wrap">
+          <input id="radius" type="number" min="0" step="any" placeholder="Contoh: 7" inputmode="decimal" aria-describedby="error">
+          <span class="unit">satuan</span>
+        </div>
+        <div class="actions">
+          <button class="primary" id="calculate">Hitung luas</button>
+          <button class="secondary" id="reset" type="button">Reset</button>
+        </div>
+        <p class="error" id="error" role="alert"></p>
+      </section>
+    </div>
+    <section class="result" aria-live="polite">
+      <div class="result-label">Hasil luas lingkaran</div>
+      <div class="result-number" id="answer">—</div>
+      <div class="formula" id="steps">Rumus: <strong>L = π × r²</strong><br>Gunakan π ≈ 3,14 atau π lebih tepat untuk perhitungan.</div>
+    </section>
+  </main>
+  <footer class="caption"><strong><em>@Mr. One El Hasyimi</em></strong> · Kelas 9 IBS 2</footer>
+</div>
+<script>
+  const radiusInput = document.getElementById('radius');
+  const answer = document.getElementById('answer');
+  const steps = document.getElementById('steps');
+  const error = document.getElementById('error');
+  const fmt = n => new Intl.NumberFormat('id-ID', { maximumFractionDigits: 6 }).format(n);
+  function calculate() {
+    const raw = radiusInput.value.trim();
+    const r = Number(raw);
+    error.textContent = '';
+    if (raw === '' || !Number.isFinite(r) || r < 0) {
+      error.textContent = 'Masukkan jari-jari berupa angka nol atau lebih.';
+      answer.textContent = '—';
+      steps.innerHTML = 'Rumus: <strong>L = π × r²</strong>';
+      radiusInput.focus();
+      return;
+    }
+    const area = Math.PI * r * r;
+    answer.textContent = fmt(area) + ' satuan²';
+    steps.innerHTML = 'Rumus: <strong>L = π × r²</strong><br>' +
+      'Substitusi: L = π × ' + fmt(r) + '²<br>' +
+      'Perhitungan: L = π × ' + fmt(r * r) + '<br>' +
+      '<strong>L ≈ ' + fmt(area) + ' satuan²</strong>';
+  }
+  document.getElementById('calculate').addEventListener('click', calculate);
+  radiusInput.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+  document.getElementById('reset').addEventListener('click', () => {
+    radiusInput.value = '';
+    answer.textContent = '—';
+    error.textContent = '';
+    steps.innerHTML = 'Rumus: <strong>L = π × r²</strong><br>Gunakan π ≈ 3,14 atau π lebih tepat untuk perhitungan.';
+    radiusInput.focus();
+  });
+</script>
+</body>
+</html>
